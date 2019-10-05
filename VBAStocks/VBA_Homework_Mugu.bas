@@ -1,5 +1,3 @@
-Attribute VB_Name = "Module1"
-
 
 Sub VBAStocks()
 
@@ -39,7 +37,7 @@ Sub VBAStocks()
         For i = 2 To LastRow
              'check below column has same tiker
              If (ws.Range("A" & i) = ws.Range("A" & (i + 1))) Then
-                'check date is jan 1st
+                'check Ticker change in next column or not
                 ticker_symbol = ws.Range("A" & (i + 1)).Value
                 If (ws.Range("A" & (i - 1)) <> ws.Range("A" & i)) Then
                     opening_price = ws.Range("C" & i).Value
@@ -59,7 +57,7 @@ Sub VBAStocks()
                 End If
                     
                 
-                
+                'write in cells
                 ws.Range("I" & j).Value = ticker_symbol
                 
                 ws.Range("J" & j).Value = (closing_price - opening_price)
@@ -84,7 +82,7 @@ Sub VBAStocks()
             
         Next i
  
- 
+        'find last row in calculated column
         lRow = ws.Cells(Rows.Count, 10).End(xlUp).Row
         
         Dim high As Double
@@ -94,6 +92,7 @@ Sub VBAStocks()
         Dim hVolume As Double
         Dim hVRow As Integer
         
+        'change cell color based on cell value
         For Each Cell In ws.Range("J2:J" & lRow)
             If Cell.Value > 0 Then
                 Cell.Interior.ColorIndex = 4
@@ -102,6 +101,7 @@ Sub VBAStocks()
             End If
          Next Cell
          
+        'find high and low % change
         ws.Range("P1") = "Ticker"
         ws.Range("Q1") = "Value"
         ws.Range("O2").Value = "Gretest%Increase"
@@ -121,11 +121,12 @@ Sub VBAStocks()
          
          ws.Range("P2").Value = ws.Range("I" & rowHigh).Value
          ws.Range("Q2").Value = high
+         ws.Range("Q2").NumberFormat = "#0.00%"
          ws.Range("P3").Value = ws.Range("I" & rowLow).Value
          ws.Range("Q3").Value = low
-        
+         ws.Range("Q3").NumberFormat = "#0.00%"
        
-                
+         'find highest volumn in a year
         For Each Cell In ws.Range("L2:L" & lRow)
             If hVolume < Cell.Value Then
                 hVolume = Cell.Value
@@ -136,6 +137,7 @@ Sub VBAStocks()
         ws.Range("P4").Value = ws.Range("I" & hVRow).Value
         ws.Range("Q4").Value = hVolume
          
+        'reset value before next calculation
         high = 0
         rowHigh = 0
         low = 0
@@ -145,7 +147,7 @@ Sub VBAStocks()
         hVRow = 0
         lRow = 0
         
-      
+     'got to next worksheet
     Next ws
     
 End Sub
